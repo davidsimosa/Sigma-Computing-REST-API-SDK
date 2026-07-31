@@ -7,6 +7,7 @@
 [![node](https://img.shields.io/node/v/sigma-computing-rest-api-sdk)](https://nodejs.org)
 
 **Key features:**
+
 - Full TypeScript types for every request parameter, request body, and response — generated directly from the official OpenAPI spec
 - Auto-pagination with async iteration and `.toArray()` helpers
 - OAuth2 client credentials flow with automatic token fetch and refresh
