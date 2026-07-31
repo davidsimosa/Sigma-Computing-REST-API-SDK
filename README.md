@@ -1,8 +1,18 @@
 # sigma-computing-rest-api-sdk
 
-A fully-typed TypeScript SDK for the [Sigma Computing REST API](https://help.sigmacomputing.com/reference).
+> TypeScript SDK for the [Sigma Computing REST API](https://help.sigmacomputing.com/reference)
 
-Built with [openapi-typescript](https://openapi-ts.dev/) and [openapi-fetch](https://openapi-ts.dev/openapi-fetch/). All 246 endpoints are exposed as ergonomic, resource-based methods with full type safety for parameters, request bodies, and responses.
+[![npm version](https://img.shields.io/npm/v/sigma-computing-rest-api-sdk)](https://www.npmjs.com/package/sigma-computing-rest-api-sdk)
+[![license](https://img.shields.io/npm/l/sigma-computing-rest-api-sdk)](LICENSE)
+[![node](https://img.shields.io/node/v/sigma-computing-rest-api-sdk)](https://nodejs.org)
+
+**Key features:**
+- Full TypeScript types for every request parameter, request body, and response — generated directly from the official OpenAPI spec
+- Auto-pagination with async iteration and `.toArray()` helpers
+- OAuth2 client credentials flow with automatic token fetch and refresh
+- Built-in 429 retry with exponential backoff, jitter, and `Retry-After` header support
+- Concurrency limiting to avoid overwhelming the API
+- Hydrated response objects with sub-resource accessors (e.g. `workbook.pages.listAll()`)
 
 ## Installation
 
@@ -54,25 +64,6 @@ const sigma = createSigmaClient({
 const me = await sigma.whoami.get();
 console.log(me);
 ```
-
-## API Regions
-
-Pass the `baseUrl` matching your organization's cloud region:
-
-| Cloud | Region           | Base URL                                  |
-| ----- | ---------------- | ----------------------------------------- |
-| GCP   | US               | `https://api.sigmacomputing.com`          |
-| GCP   | KSA              | `https://api.sa.gcp.sigmacomputing.com`   |
-| AWS   | US West          | `https://aws-api.sigmacomputing.com`      |
-| AWS   | US East          | `https://api.us-a.aws.sigmacomputing.com` |
-| AWS   | Canada           | `https://api.ca.aws.sigmacomputing.com`   |
-| AWS   | Europe           | `https://api.eu.aws.sigmacomputing.com`   |
-| AWS   | Australia / APAC | `https://api.au.aws.sigmacomputing.com`   |
-| AWS   | UK               | `https://api.uk.aws.sigmacomputing.com`   |
-| Azure | US               | `https://api.us.azure.sigmacomputing.com` |
-| Azure | Europe           | `https://api.eu.azure.sigmacomputing.com` |
-| Azure | Canada           | `https://api.ca.azure.sigmacomputing.com` |
-| Azure | UK               | `https://api.uk.azure.sigmacomputing.com` |
 
 ## Usage Examples
 
@@ -385,6 +376,25 @@ try {
 }
 ```
 
+## API Regions
+
+Pass the `baseUrl` matching your organization's cloud region:
+
+| Cloud | Region           | Base URL                                  |
+| ----- | ---------------- | ----------------------------------------- |
+| GCP   | US               | `https://api.sigmacomputing.com`          |
+| GCP   | KSA              | `https://api.sa.gcp.sigmacomputing.com`   |
+| AWS   | US West          | `https://aws-api.sigmacomputing.com`      |
+| AWS   | US East          | `https://api.us-a.aws.sigmacomputing.com` |
+| AWS   | Canada           | `https://api.ca.aws.sigmacomputing.com`   |
+| AWS   | Europe           | `https://api.eu.aws.sigmacomputing.com`   |
+| AWS   | Australia / APAC | `https://api.au.aws.sigmacomputing.com`   |
+| AWS   | UK               | `https://api.uk.aws.sigmacomputing.com`   |
+| Azure | US               | `https://api.us.azure.sigmacomputing.com` |
+| Azure | Europe           | `https://api.eu.azure.sigmacomputing.com` |
+| Azure | Canada           | `https://api.ca.azure.sigmacomputing.com` |
+| Azure | UK               | `https://api.uk.azure.sigmacomputing.com` |
+
 ## Raw Client Access
 
 For advanced use cases, the underlying `openapi-fetch` client is available:
@@ -470,79 +480,6 @@ However, if the API response already contains a field with the same name as a su
 
 The `Resource` suffix is a **fallback only** — it is not a general naming convention. All other sub-resource accessors use their natural name. If a future OpenAPI spec update introduces a new collision, the generator will automatically apply the same rename and the `npm run generate` output will indicate which accessor was affected.
 
-## Using Without Publishing to npm
-
-There are a few ways to consume the SDK from another local project without going through npm.
-
-### Option 1: `npm link` (symlink)
-
-Good for rapid local iteration — no reinstall needed after each rebuild. **Not suitable for CI/CD** because the symlink only exists on your machine.
-
-In the SDK directory:
-
-```bash
-npm run build   # or npm run build for the full pipeline
-npm link
-```
-
-In your consuming project:
-
-```bash
-npm link sigma-computing-rest-api-sdk
-```
-
-To unlink later:
-
-```bash
-# In your consuming project
-npm unlink sigma-computing-rest-api-sdk
-
-# In the SDK directory
-npm unlink
-```
-
-### Option 2: `file:` path dependency ✓ recommended
-
-The reference is committed to `package.json` and `package-lock.json`, so `npm install` works the same way locally and in CI — no global symlinks that only exist on your machine. Best choice when the SDK lives in the same repo, is still being iterated on, and needs to work correctly in production CI/CD. After each SDK rebuild, re-run `npm install` in the consuming project to copy the new `dist/` over.
-
-Add the SDK to your consuming project's `package.json` using a relative path:
-
-```json
-{
-  "dependencies": {
-    "sigma-computing-rest-api-sdk": "file:../sigma-computing-rest-api-sdk"
-  }
-}
-```
-
-Then build the SDK and install in your project:
-
-```bash
-# In the SDK directory
-npm run build
-
-# In your consuming project
-npm install
-```
-
-### Option 3: `npm pack` (tarball)
-
-Produces a `.tgz` that installs exactly as it would from npm. Useful for sharing a specific snapshot or verifying the published output without actually publishing — not practical as an ongoing workflow since you'd need to re-pack and reinstall after every change.
-
-In the SDK directory:
-
-```bash
-npm run build
-npm pack
-# produces sigma-computing-rest-api-sdk-0.1.0.tgz
-```
-
-In your consuming project:
-
-```bash
-npm install /path/to/sigma-computing-rest-api-sdk-0.1.0.tgz
-```
-
 ## Development
 
 ```bash
@@ -567,13 +504,17 @@ npm run test:watch    # Vitest (watch mode)
 npm run build:bundle  # tsup only (skip generate/lint/test)
 ```
 
-## Publishing to npm
+## Contributing
 
-1. Update the `version` in `package.json`
-2. Fill in the `repository`, `bugs`, and `homepage` fields in `package.json`
-3. Run `npm publish` — `prepublishOnly` automatically runs the full build pipeline (generate → lint → format check → typecheck → tests → bundle) before publishing
+Contributions are welcome! To get started:
 
-If publishing under a scope (e.g. `@myorg/sigma-computing-rest-api-sdk`), update the `name` field in `package.json` accordingly. The `publishConfig.access` is already set to `"public"`.
+1. Fork the repo and create a branch from `main`
+2. Run `npm install` to install dependencies
+3. Make your changes — if you're modifying the OpenAPI spec or codegen scripts, run `npm run generate` to regenerate the resource files
+4. Run `npm run build` to verify the full pipeline passes (lint, typecheck, tests, bundle)
+5. Open a pull request
+
+Please keep PRs focused — one feature or fix per PR makes review much easier.
 
 ## License
 
