@@ -45,12 +45,12 @@
   },
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/davidsimosa/Sigma-Computing-REST-API-SDK"
   },
   "bugs": {
-    "url": ""
+    "url": "https://github.com/davidsimosa/Sigma-Computing-REST-API-SDK/issues"
   },
-  "homepage": "",
+  "homepage": "https://github.com/davidsimosa/Sigma-Computing-REST-API-SDK#readme",
   "keywords": [
     "sigma",
     "sigma-computing",
