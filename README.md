@@ -1,8 +1,18 @@
 # sigma-computing-rest-api-sdk
 
-A fully-typed TypeScript SDK for the [Sigma Computing REST API](https://help.sigmacomputing.com/reference).
+> TypeScript SDK for the [Sigma Computing REST API](https://help.sigmacomputing.com/reference)
 
-Built with [openapi-typescript](https://openapi-ts.dev/) and [openapi-fetch](https://openapi-ts.dev/openapi-fetch/). All 246 endpoints are exposed as ergonomic, resource-based methods with full type safety for parameters, request bodies, and responses.
+[![npm version](https://img.shields.io/npm/v/sigma-computing-rest-api-sdk)](https://www.npmjs.com/package/sigma-computing-rest-api-sdk)
+[![license](https://img.shields.io/npm/l/sigma-computing-rest-api-sdk)](LICENSE)
+[![node](https://img.shields.io/node/v/sigma-computing-rest-api-sdk)](https://nodejs.org)
+
+**Key features:**
+- Full TypeScript types for every request parameter, request body, and response — generated directly from the official OpenAPI spec
+- Auto-pagination with async iteration and `.toArray()` helpers
+- OAuth2 client credentials flow with automatic token fetch and refresh
+- Built-in 429 retry with exponential backoff, jitter, and `Retry-After` header support
+- Concurrency limiting to avoid overwhelming the API
+- Hydrated response objects with sub-resource accessors (e.g. `workbook.pages.listAll()`)
 
 ## Installation
 
@@ -54,25 +64,6 @@ const sigma = createSigmaClient({
 const me = await sigma.whoami.get();
 console.log(me);
 ```
-
-## API Regions
-
-Pass the `baseUrl` matching your organization's cloud region:
-
-| Cloud | Region           | Base URL                                  |
-| ----- | ---------------- | ----------------------------------------- |
-| GCP   | US               | `https://api.sigmacomputing.com`          |
-| GCP   | KSA              | `https://api.sa.gcp.sigmacomputing.com`   |
-| AWS   | US West          | `https://aws-api.sigmacomputing.com`      |
-| AWS   | US East          | `https://api.us-a.aws.sigmacomputing.com` |
-| AWS   | Canada           | `https://api.ca.aws.sigmacomputing.com`   |
-| AWS   | Europe           | `https://api.eu.aws.sigmacomputing.com`   |
-| AWS   | Australia / APAC | `https://api.au.aws.sigmacomputing.com`   |
-| AWS   | UK               | `https://api.uk.aws.sigmacomputing.com`   |
-| Azure | US               | `https://api.us.azure.sigmacomputing.com` |
-| Azure | Europe           | `https://api.eu.azure.sigmacomputing.com` |
-| Azure | Canada           | `https://api.ca.azure.sigmacomputing.com` |
-| Azure | UK               | `https://api.uk.azure.sigmacomputing.com` |
 
 ## Usage Examples
 
@@ -385,6 +376,25 @@ try {
 }
 ```
 
+## API Regions
+
+Pass the `baseUrl` matching your organization's cloud region:
+
+| Cloud | Region           | Base URL                                  |
+| ----- | ---------------- | ----------------------------------------- |
+| GCP   | US               | `https://api.sigmacomputing.com`          |
+| GCP   | KSA              | `https://api.sa.gcp.sigmacomputing.com`   |
+| AWS   | US West          | `https://aws-api.sigmacomputing.com`      |
+| AWS   | US East          | `https://api.us-a.aws.sigmacomputing.com` |
+| AWS   | Canada           | `https://api.ca.aws.sigmacomputing.com`   |
+| AWS   | Europe           | `https://api.eu.aws.sigmacomputing.com`   |
+| AWS   | Australia / APAC | `https://api.au.aws.sigmacomputing.com`   |
+| AWS   | UK               | `https://api.uk.aws.sigmacomputing.com`   |
+| Azure | US               | `https://api.us.azure.sigmacomputing.com` |
+| Azure | Europe           | `https://api.eu.azure.sigmacomputing.com` |
+| Azure | Canada           | `https://api.ca.azure.sigmacomputing.com` |
+| Azure | UK               | `https://api.uk.azure.sigmacomputing.com` |
+
 ## Raw Client Access
 
 For advanced use cases, the underlying `openapi-fetch` client is available:
@@ -493,6 +503,18 @@ npm run test          # Vitest (single run)
 npm run test:watch    # Vitest (watch mode)
 npm run build:bundle  # tsup only (skip generate/lint/test)
 ```
+
+## Contributing
+
+Contributions are welcome! To get started:
+
+1. Fork the repo and create a branch from `main`
+2. Run `npm install` to install dependencies
+3. Make your changes — if you're modifying the OpenAPI spec or codegen scripts, run `npm run generate` to regenerate the resource files
+4. Run `npm run build` to verify the full pipeline passes (lint, typecheck, tests, bundle)
+5. Open a pull request
+
+Please keep PRs focused — one feature or fix per PR makes review much easier.
 
 ## License
 
